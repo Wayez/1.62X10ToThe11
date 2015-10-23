@@ -68,7 +68,7 @@ def makePost(username, title, contents):
     username = sanitize(username)
     title = sanitize(title)
     contents = sanitize(contents)
-
+    db = connection['posts'] 
 ####### mongoing things somehow    
 #    conn = sqlite3.connect("myDataBase.db")
 #    c = conn.cursor()
