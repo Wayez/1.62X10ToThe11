@@ -3,13 +3,21 @@ import md5;
 import re;
 
 # FUNCTIONS TO MONGO
+
+# KATHY
 # authenticate
 # newUser
 # changePassword
+
+# WAYEZ
 # makePost
 # getPost
+
+# WINTON
 # getPoster
 # getAllPosts
+
+# JERRY
 # addToPost
 # removePost
 
