@@ -23,8 +23,6 @@ import re;
 
 
 ## two mongo dbs: logins and posts
-connection = MongoClient()
-
 
 def sanitize(input):
     return re.sub('"', "  ", input)
@@ -39,10 +37,10 @@ def encrypt(username,password):
 def authenticate(username, password):
     username = sanitize(username)
 #    conn = sqlite3.connect("myDataBase.db")
- #   c = conn.cursor()
-  #  ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
+#    c = conn.cursor()
+#    ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
 
-  ### NOT ENTIRELY SURE 
+    connection = MongoClient() 
     db = connection['logins']
     ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
     for r in ans:
@@ -52,12 +50,16 @@ def authenticate(username, password):
 
 def newUser(username,password):
     username = sanitize(username)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    ans = c.execute('select * from logins where username = "%s";' % username)
+#    conn = sqlite3.connect("myDataBase.db")
+#    c = conn.cursor()
+#    ans = c.execute('select * from logins where username = "%s";' % username)
+
+    connection = MongoClient()
+    db = connection['logins']
+    ans = db.logins.find({'username':'%s'})
     for r in ans:
         return False
-    ans = c.execute('insert into logins values("'+username+'","'+encrypt(username,password)+'");')
+#    ans = c.execute('insert into logins values("'+username+'","'+encrypt(username,password)+'");')
     conn.commit()
     return True
 
@@ -76,11 +78,14 @@ def makePost(username, title, contents):
     username = sanitize(username)
     title = sanitize(title)
     contents = sanitize(contents)
-    db = connection['posts'] 
-####### mongoing things somehow    
+
+    connection = MongoClient()
+    db = connection['posts']
+    
 #    conn = sqlite3.connect("myDataBase.db")
 #    c = conn.cursor()
 #    ans = c.execute('select * from posts where title = "%s";' % title)
+
     ans = db.posts.find({'title':"%s"}) 
     for r in ans:
         return False;
