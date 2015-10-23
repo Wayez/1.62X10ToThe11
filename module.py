@@ -1,6 +1,23 @@
-import sqlite3
+#import sqlite3
 import md5;
 import re;
+
+# FUNCTIONS TO MONGO
+# authenticate
+# newUser
+# changePassword
+# makePost
+# getPost
+# getPoster
+# getAllPosts
+# addToPost
+# removePost
+
+
+## two mongo dbs: logins and posts
+connection = MongoClient()
+
+
 def sanitize(input):
     return re.sub('"', "  ", input)
 
@@ -13,9 +30,13 @@ def encrypt(username,password):
 
 def authenticate(username, password):
     username = sanitize(username)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";') 
+#    conn = sqlite3.connect("myDataBase.db")
+ #   c = conn.cursor()
+  #  ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
+
+  ### NOT ENTIRELY SURE 
+    db = connection['logins']
+    ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
     for r in ans:
         return True;
     return False;
@@ -47,11 +68,16 @@ def makePost(username, title, contents):
     username = sanitize(username)
     title = sanitize(title)
     contents = sanitize(contents)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    ans = c.execute('select * from posts where title = "%s";' % title)
+
+####### mongoing things somehow    
+#    conn = sqlite3.connect("myDataBase.db")
+#    c = conn.cursor()
+#    ans = c.execute('select * from posts where title = "%s";' % title)
+    ans = db.posts.find({'title':"%s"}) 
     for r in ans:
         return False;
+
+    
     ans = c.execute('insert into posts values("%s","%s","%s","%s");' % (username, title, contents, username))
     conn.commit()
     return True;
