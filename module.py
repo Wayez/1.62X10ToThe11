@@ -21,10 +21,15 @@ from pymongo import MongoClient
 # removePost
 
 ## two mongo dbs: logins and posts
+<<<<<<< HEAD
+#HELLO. PULL REQUESTING
+
+=======
 #Winton: I think one db is ok?
 
 connection = MongoClient()
 db = connection['db']
+>>>>>>> e57053a8e2086e2ce881c0fa5a1ba80dfe0cc96f
 
 def sanitize(input):
     return re.sub('"', "  ", input)
@@ -38,32 +43,39 @@ def encrypt(username,password):
 
 def authenticate(username, password):
     username = sanitize(username)
-#    conn = sqlite3.connect("myDataBase.db")
-#    c = conn.cursor()
-#    ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
-
-    connection = MongoClient() 
-    db = connection['logins']
-    ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
-    for r in ans:
+"""    conn = sqlite3.connect("myDataBase.db")
+    c = conn.cursor()
+    ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
+"""
+     connection = MongoClient()
+     db = connection['logins']
+     ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
+     for document in ans:
         return True;
     return False;
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
     username = sanitize(username)
-#    conn = sqlite3.connect("myDataBase.db")
-#    c = conn.cursor()
-#    ans = c.execute('select * from logins where username = "%s";' % username)
+    
+"""    conn = sqlite3.connect("myDataBase.db")
+    c = conn.cursor()
+    ans = c.execute('select * from logins where username = "%s";' % username)
+"""
 
     connection = MongoClient()
     db = connection['logins']
-    ans = db.logins.find({'username':'%s'})
-    for r in ans:
+    check = db.logins.find({'username':username}).count()
+    if check != 0:
         return False
-#    ans = c.execute('insert into logins values("'+username+'","'+encrypt(username,password)+'");')
+
+"""    ans = c.execute('insert into logins values("'+username+'","'+encrypt(username,password)+'");')
     conn.commit()
+"""
+
+    ans = db.users.insert_one({'username':username} ,{'password':password})
     return True
+    connection.close() 
 
 def changePassword(username, oldPassword, newPassword):
     newPassword = sanitize(newPassword);
