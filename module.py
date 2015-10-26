@@ -87,13 +87,11 @@ def makePost(username, title, contents):
 #    c = conn.cursor()
 #    ans = c.execute('select * from posts where title = "%s";' % title)
 
-    ans = db.posts.find({'title':"%s"}) 
+    ans = db.posts.find({'title':title}) 
     for r in ans:
         return False;
 
-    
-    ans = c.execute('insert into posts values("%s","%s","%s","%s");' % (username, title, contents, username))
-    conn.commit()
+   	db,data.insert([{'username':username, 'title':title, 'contents':contents, 'lastPoster':username}])
     return True;
     #adds a post to the databes from username with title = title and contents = contents
     #returns a boolean representing if the operation was successful
@@ -101,9 +99,7 @@ def makePost(username, title, contents):
 
 def getPost(title):
     title = sanitize(title)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    ans = c.execute('select * from posts where title ="%s";' % title)
+    ans = db.data.find({'title': title})
     for r in ans:
         return r[2];
     #returns the content of post with title = title
@@ -111,7 +107,7 @@ def getPost(title):
 
 def getPoster(title):
     title = sanitize(title)
-    ans = db.data.find('title'==title)
+    ans = db.data.find({'title':title})
     for r in ans:
         return r[0]
     #returns the original poster of a story
