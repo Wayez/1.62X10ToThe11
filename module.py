@@ -20,34 +20,17 @@ from pymongo import MongoClient
 # addToPost
 # removePost
 
-## two mongo dbs: logins and posts
-#Winton: I think one db is ok?
+## two collections dbs: logins and posts
 
 connection = MongoClient()
 db = connection['db']
 
-def sanitize(input):
-    return re.sub('"', "  ", input)
-
-def encrypt(username,password):
-    m = md5.new()
-    m.update(username+password)
-    return m.hexdigest()
-    #hashes and salts the pasword for permanent storage or retrieval
-    #returns hashed password
-
 def authenticate(username, password):
-    username = sanitize(username)
-#    conn = sqlite3.connect("myDataBase.db")
-#    c = conn.cursor()
-#    ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
-
     connection = MongoClient() 
-    db = connection['logins']
-    ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
+    ans = db.logins.find({'username':username},{'password':password})
     for r in ans:
-        return True;
-    return False;
+        return r;
+    return "Bad";
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
