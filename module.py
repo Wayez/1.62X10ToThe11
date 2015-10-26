@@ -23,7 +23,7 @@ import re;
 
 
 ## two mongo dbs: logins and posts
-
+#HELLO. PULL REQUESTING
 
 
 def sanitize(input):
@@ -70,6 +70,7 @@ def newUser(username,password):
 
     ans = db.users.insert_one({'username':username} ,{'password':password})
     return True
+    connection.close() 
 
 def changePassword(username, oldPassword, newPassword):
     newPassword = sanitize(newPassword);
