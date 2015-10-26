@@ -126,24 +126,22 @@ def getAllPosts():
 def addToPost(username,title, content):
     title = sanitize(title)
     content = sanitize(content)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
+    conn = MongoClient()
+    dbase = conn['posts']
     newContent = " "+getPost(title)+content
-    ans = c.execute('select * from posts where lastPoster="%s" and title = "%s";' % (username, title))
+    ans = dbase.posts.find({'username':username,'title':title})
     for r in ans:
         return False
-    c.execute('update posts set contents = "%s" where title="%s";'% (newContent,title))
-    c.execute('update posts set lastPoster = "%s" where title="%s";' % (username, title))
-    conn.commit()
+    dbase.data.update({'lastPoster':username, 'title': title})
+    dbase.posts.update({'contents': newContent, 'title': title})
     return True;
     #adds content to content of original post and returns a boolean representing wether or not the operation was successful
 
 def removePost(title):
     title = sanitize(title)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    c.execute('delete from posts where title="%s";' % title)
-    conn.commit()
+    conn = MongoClient()
+    dbase = conn['posts']
+    dbase.posts.remove({'title':title})
     return True;
 
     #removes post with tile=title from database if it exists and username = admin
