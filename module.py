@@ -111,7 +111,7 @@ def getPost(title):
 
 def getPoster(title):
     title = sanitize(title)
-    ans = db.data.find('title':title)
+    ans = db.data.find('title'==title)
     for r in ans:
         return r[0]
     #returns the original poster of a story
