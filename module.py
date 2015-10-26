@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 
+#ayy lmao
 # FUNCTIONS TO MONGO
 
 # KATHY
@@ -106,8 +107,8 @@ def getPost(title):
     #may only be useful for debugging
 
 def getPoster(title):
-    title = sanitize(title)
-    ans = db.data.find({'title':title})
+    ayylmao = sanitize(title)
+    ans = db.data.find({'title':ayylmao})
     for r in ans:
         return r[0]
     #returns the original poster of a story
