@@ -1,6 +1,4 @@
-#import sqlite3
-import md5;
-import re;
+from pymongo import MongoClient
 
 # FUNCTIONS TO MONGO
 
@@ -21,8 +19,11 @@ import re;
 # addToPost
 # removePost
 
-
 ## two mongo dbs: logins and posts
+#Winton: I think one db is ok?
+
+connection = MongoClient()
+db = connection['db']
 
 def sanitize(input):
     return re.sub('"', "  ", input)
@@ -110,19 +111,15 @@ def getPost(title):
 
 def getPoster(title):
     title = sanitize(title)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    ans = c.execute('select * from posts where title="%s";' % title)
+    ans = db.data.find('title':title)
     for r in ans:
         return r[0]
     #returns the original poster of a story
 
 
 def getAllPosts():
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    c.execute('select * from posts;')
-    return c.fetchall();
+    ans = db.data.find()
+    return ans
     #returns a 2d array where the first index represents row id. The second index works as follows:
     #the 0 index store sthe name of the original poster
     #the 1 index represents the title of the post
