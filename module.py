@@ -1,6 +1,4 @@
-#import sqlite3
-import md5;
-import re;
+from pymongo import MongoClient
 
 # FUNCTIONS TO MONGO
 
@@ -21,10 +19,16 @@ import re;
 # addToPost
 # removePost
 
-
 ## two mongo dbs: logins and posts
+<<<<<<< HEAD
 #HELLO. PULL REQUESTING
 
+=======
+#Winton: I think one db is ok?
+
+connection = MongoClient()
+db = connection['db']
+>>>>>>> e57053a8e2086e2ce881c0fa5a1ba80dfe0cc96f
 
 def sanitize(input):
     return re.sub('"', "  ", input)
@@ -95,13 +99,11 @@ def makePost(username, title, contents):
 #    c = conn.cursor()
 #    ans = c.execute('select * from posts where title = "%s";' % title)
 
-    ans = db.posts.find({'title':"%s"}) 
+    ans = db.posts.find({'title':title}) 
     for r in ans:
         return False;
 
-    
-    ans = c.execute('insert into posts values("%s","%s","%s","%s");' % (username, title, contents, username))
-    conn.commit()
+   	db,data.insert([{'username':username, 'title':title, 'contents':contents, 'lastPoster':username}])
     return True;
     #adds a post to the databes from username with title = title and contents = contents
     #returns a boolean representing if the operation was successful
@@ -109,9 +111,7 @@ def makePost(username, title, contents):
 
 def getPost(title):
     title = sanitize(title)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    ans = c.execute('select * from posts where title ="%s";' % title)
+    ans = db.data.find({'title': title})
     for r in ans:
         return r[2];
     #returns the content of post with title = title
@@ -119,19 +119,15 @@ def getPost(title):
 
 def getPoster(title):
     title = sanitize(title)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    ans = c.execute('select * from posts where title="%s";' % title)
+    ans = db.data.find({'title':title})
     for r in ans:
         return r[0]
     #returns the original poster of a story
 
 
 def getAllPosts():
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    c.execute('select * from posts;')
-    return c.fetchall();
+    ans = db.data.find()
+    return ans
     #returns a 2d array where the first index represents row id. The second index works as follows:
     #the 0 index store sthe name of the original poster
     #the 1 index represents the title of the post
@@ -141,24 +137,22 @@ def getAllPosts():
 def addToPost(username,title, content):
     title = sanitize(title)
     content = sanitize(content)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
+    conn = MongoClient()
+    dbase = conn['posts']
     newContent = " "+getPost(title)+content
-    ans = c.execute('select * from posts where lastPoster="%s" and title = "%s";' % (username, title))
+    ans = dbase.posts.find({'username':username,'title':title})
     for r in ans:
         return False
-    c.execute('update posts set contents = "%s" where title="%s";'% (newContent,title))
-    c.execute('update posts set lastPoster = "%s" where title="%s";' % (username, title))
-    conn.commit()
+    dbase.data.update({'lastPoster':username, 'title': title})
+    dbase.posts.update({'contents': newContent, 'title': title})
     return True;
     #adds content to content of original post and returns a boolean representing wether or not the operation was successful
 
 def removePost(title):
     title = sanitize(title)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    c.execute('delete from posts where title="%s";' % title)
-    conn.commit()
+    conn = MongoClient()
+    dbase = conn['posts']
+    dbase.posts.remove({'title':title})
     return True;
 
     #removes post with tile=title from database if it exists and username = admin
