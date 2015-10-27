@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import re;
 
+#ayy lmao
 # FUNCTIONS TO MONGO
 
 # KATHY
@@ -21,41 +22,91 @@ import re;
 # removePost
 
 ## two mongo dbs: logins and posts
+<<<<<<< HEAD
+#HELLO. PULL REQUESTING
+
+=======
 #Winton: I think one db is ok?
 
 connection = MongoClient()
+<<<<<<< HEAD
 database = connection['database']
+=======
+db = connection['db']
+>>>>>>> e57053a8e2086e2ce881c0fa5a1ba80dfe0cc96f
+>>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
 
 def sanitize(input):
     return re.sub('"', "  ", input)
 
 def authenticate(username, password):
     username = sanitize(username)
+<<<<<<< HEAD
     connection = MongoClient() 
     db = connection['logins']
     ans = db.logins.find({'username':username},{'password':password})
     for r in ans:
+=======
+"""    conn = sqlite3.connect("myDataBase.db")
+    c = conn.cursor()
+    ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
+"""
+     connection = MongoClient()
+     db = connection['logins']
+     ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
+     for document in ans:
+>>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
         return True;
     return False;
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
     username = sanitize(username)
+<<<<<<< HEAD
     ans = database.logins.find({username:True})
     for r in ans:
         return False
     d = {username:password}
     database.logins.insert(d)
+=======
+    
+"""    conn = sqlite3.connect("myDataBase.db")
+    c = conn.cursor()
+    ans = c.execute('select * from logins where username = "%s";' % username)
+"""
+
+    connection = MongoClient()
+    db = connection['logins']
+    check = db.logins.find({'username':username}).count()
+    if check != 0:
+        return False
+
+"""    ans = c.execute('insert into logins values("'+username+'","'+encrypt(username,password)+'");')
+    conn.commit()
+"""
+
+    ans = db.users.insert_one({'username':username} ,{'password':password})
+>>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
     return True
+    connection.close() 
 
 def changePassword(username, oldPassword, newPassword):
     newPassword = sanitize(newPassword);
     username = sanitize(username);
     if(authenticate(username,oldPassword)):
-       conn = sqlite3.connect("myDataBase.db")
+ """      conn = sqlite3.connect("myDataBase.db")
        c = conn.cursor()
        c.execute('update logins set password = "%s" where username = "%s";' % (encrypt(username,newPassword), username))
-       conn.commit()
+       conn.commit()"""
+       db = connection['logins']
+       db.logins.update(
+           {'username': username},
+           {
+               'username': username,
+               'password': newPassword
+           },
+       )
+       #untested
        return True
     return False
 
@@ -90,8 +141,8 @@ def getPost(title):
     #may only be useful for debugging
 
 def getPoster(title):
-    title = sanitize(title)
-    ans = db.data.find({'title':title})
+    ayylmao = sanitize(title)
+    ans = db.data.find({'title':ayylmao})
     for r in ans:
         return r[0]
     #returns the original poster of a story
@@ -109,24 +160,22 @@ def getAllPosts():
 def addToPost(username,title, content):
     title = sanitize(title)
     content = sanitize(content)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
+    conn = MongoClient()
+    dbase = conn['posts']
     newContent = " "+getPost(title)+content
-    ans = c.execute('select * from posts where lastPoster="%s" and title = "%s";' % (username, title))
+    ans = dbase.posts.find({'username':username,'title':title})
     for r in ans:
         return False
-    c.execute('update posts set contents = "%s" where title="%s";'% (newContent,title))
-    c.execute('update posts set lastPoster = "%s" where title="%s";' % (username, title))
-    conn.commit()
+    dbase.data.update({'lastPoster':username, 'title': title})
+    dbase.posts.update({'contents': newContent, 'title': title})
     return True;
     #adds content to content of original post and returns a boolean representing wether or not the operation was successful
 
 def removePost(title):
     title = sanitize(title)
-    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    c.execute('delete from posts where title="%s";' % title)
-    conn.commit()
+    conn = MongoClient()
+    dbase = conn['posts']
+    dbase.posts.remove({'title':title})
     return True;
 
     #removes post with tile=title from database if it exists and username = admin
