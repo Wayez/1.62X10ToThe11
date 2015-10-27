@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import re;
 
 # FUNCTIONS TO MONGO
 
@@ -23,27 +24,16 @@ from pymongo import MongoClient
 #Winton: I think one db is ok?
 
 connection = MongoClient()
-db = connection['db']
+database = connection['database']
 
 def sanitize(input):
     return re.sub('"', "  ", input)
 
-def encrypt(username,password):
-    m = md5.new()
-    m.update(username+password)
-    return m.hexdigest()
-    #hashes and salts the pasword for permanent storage or retrieval
-    #returns hashed password
-
 def authenticate(username, password):
     username = sanitize(username)
-#    conn = sqlite3.connect("myDataBase.db")
-#    c = conn.cursor()
-#    ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
-
     connection = MongoClient() 
     db = connection['logins']
-    ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
+    ans = db.logins.find({'username':username},{'password':password})
     for r in ans:
         return True;
     return False;
@@ -51,17 +41,11 @@ def authenticate(username, password):
 
 def newUser(username,password):
     username = sanitize(username)
-#    conn = sqlite3.connect("myDataBase.db")
-#    c = conn.cursor()
-#    ans = c.execute('select * from logins where username = "%s";' % username)
-
-    connection = MongoClient()
-    db = connection['logins']
-    ans = db.logins.find({'username':'%s'})
+    ans = database.logins.find({username:True})
     for r in ans:
         return False
-#    ans = c.execute('insert into logins values("'+username+'","'+encrypt(username,password)+'");')
-    conn.commit()
+    d = {username:password}
+    database.logins.insert(d)
     return True
 
 def changePassword(username, oldPassword, newPassword):
