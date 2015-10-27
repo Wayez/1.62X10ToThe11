@@ -81,10 +81,19 @@ def changePassword(username, oldPassword, newPassword):
     newPassword = sanitize(newPassword);
     username = sanitize(username);
     if(authenticate(username,oldPassword)):
-       conn = sqlite3.connect("myDataBase.db")
+ """      conn = sqlite3.connect("myDataBase.db")
        c = conn.cursor()
        c.execute('update logins set password = "%s" where username = "%s";' % (encrypt(username,newPassword), username))
-       conn.commit()
+       conn.commit()"""
+       db = connection['logins']
+       db.logins.update(
+           {'username': username},
+           {
+               'username': username,
+               'password': newPassword
+           },
+       )
+       #untested
        return True
     return False
 
