@@ -10,10 +10,10 @@ So we're 1.62X10ToThe11. :D
 ###Contributors
 |Member | Role|
 |------|-----|
-|Boying Tang | Leader  |
-|Christopher Liang | UX  |
-|Javis Wu | Middleware  |
-|Jion Fairchild | Backend|
+|<strike>Boying Tang</strike>Kathy Wang | Leader  |
+|<strike>Christopher Liang</strike>Winton Yee | UX  |
+|<strike>Javis Wu</strike>Jerry Lei | Middleware  |
+|<strike>Jion Fairchild</strike>Wayez Chowdhury | Backend|
 
 ###Instructions
 1. Run app.py
@@ -47,3 +47,7 @@ sqlite3: https://www.sqlite.org/download.html
 - [ ] User profile page
 - [ ] Get a good grade
 - [x] 10/18/2015 About page
+
+###Task List(Blahgerrz)
+- [ ] Convert sqlite to mongo
+- [ ] Update CSS
