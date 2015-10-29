@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import re;
 
 #ayy lmao
+# hi wayez
 # FUNCTIONS TO MONGO
 
 # KATHY
