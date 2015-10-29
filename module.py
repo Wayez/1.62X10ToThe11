@@ -1,6 +1,8 @@
 from pymongo import MongoClient
+import re;
 
 #ayy lmao
+# hi wayez
 # FUNCTIONS TO MONGO
 
 # KATHY
@@ -20,42 +22,105 @@ from pymongo import MongoClient
 # addToPost
 # removePost
 
+<<<<<<< HEAD
 ## two collections dbs: logins and posts
+=======
+## two mongo dbs: logins and posts
+<<<<<<< HEAD
+#HELLO. PULL REQUESTING
+
+=======
+#Winton: I think one db is ok?
+>>>>>>> 5a5c72b34ab05435d7459817aad50a884a2571cf
 
 connection = MongoClient()
+<<<<<<< HEAD
+database = connection['database']
+=======
 db = connection['db']
+>>>>>>> e57053a8e2086e2ce881c0fa5a1ba80dfe0cc96f
+>>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
 
+<<<<<<< HEAD
 def authenticate(username, password):
     connection = MongoClient() 
     ans = db.logins.find({'username':username},{'password':password})
     for r in ans:
         return r;
     return "Bad";
+=======
+def sanitize(input):
+    return re.sub('"', "  ", input)
+
+def authenticate(username, password):
+    username = sanitize(username)
+<<<<<<< HEAD
+    connection = MongoClient() 
+    db = connection['logins']
+    ans = db.logins.find({'username':username},{'password':password})
+    for r in ans:
+=======
+"""    conn = sqlite3.connect("myDataBase.db")
+    c = conn.cursor()
+    ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
+"""
+     connection = MongoClient()
+     db = connection['logins']
+     ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
+     for document in ans:
+>>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
+        return True;
+    return False;
+>>>>>>> 5a5c72b34ab05435d7459817aad50a884a2571cf
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
     username = sanitize(username)
-#    conn = sqlite3.connect("myDataBase.db")
-#    c = conn.cursor()
-#    ans = c.execute('select * from logins where username = "%s";' % username)
+<<<<<<< HEAD
+    ans = database.logins.find({username:True})
+    for r in ans:
+        return False
+    d = {username:password}
+    database.logins.insert(d)
+=======
+    
+"""    conn = sqlite3.connect("myDataBase.db")
+    c = conn.cursor()
+    ans = c.execute('select * from logins where username = "%s";' % username)
+"""
 
     connection = MongoClient()
     db = connection['logins']
-    ans = db.logins.find({'username':'%s'})
-    for r in ans:
+    check = db.logins.find({'username':username}).count()
+    if check != 0:
         return False
-#    ans = c.execute('insert into logins values("'+username+'","'+encrypt(username,password)+'");')
+
+"""    ans = c.execute('insert into logins values("'+username+'","'+encrypt(username,password)+'");')
     conn.commit()
+"""
+
+    ans = db.users.insert_one({'username':username} ,{'password':password})
+>>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
     return True
+    connection.close() 
 
 def changePassword(username, oldPassword, newPassword):
     newPassword = sanitize(newPassword);
     username = sanitize(username);
     if(authenticate(username,oldPassword)):
-       conn = sqlite3.connect("myDataBase.db")
+ """      conn = sqlite3.connect("myDataBase.db")
        c = conn.cursor()
        c.execute('update logins set password = "%s" where username = "%s";' % (encrypt(username,newPassword), username))
-       conn.commit()
+       conn.commit()"""
+       db = connection['logins']
+       db.logins.update(
+           {'username': username},
+           {
+               'username': username,
+               'password': newPassword
+           },
+       )
+       #untested
        return True
     return False
 
