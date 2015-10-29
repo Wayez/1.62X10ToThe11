@@ -22,12 +22,16 @@ import re;
 # addToPost
 # removePost
 
+<<<<<<< HEAD
+## two collections dbs: logins and posts
+=======
 ## two mongo dbs: logins and posts
 <<<<<<< HEAD
 #HELLO. PULL REQUESTING
 
 =======
 #Winton: I think one db is ok?
+>>>>>>> 5a5c72b34ab05435d7459817aad50a884a2571cf
 
 connection = MongoClient()
 <<<<<<< HEAD
@@ -37,6 +41,14 @@ db = connection['db']
 >>>>>>> e57053a8e2086e2ce881c0fa5a1ba80dfe0cc96f
 >>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
 
+<<<<<<< HEAD
+def authenticate(username, password):
+    connection = MongoClient() 
+    ans = db.logins.find({'username':username},{'password':password})
+    for r in ans:
+        return r;
+    return "Bad";
+=======
 def sanitize(input):
     return re.sub('"', "  ", input)
 
@@ -59,6 +71,7 @@ def authenticate(username, password):
 >>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
         return True;
     return False;
+>>>>>>> 5a5c72b34ab05435d7459817aad50a884a2571cf
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
