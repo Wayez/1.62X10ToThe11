@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import re;
 
 #ayy lmao
+# hi wayez
 # FUNCTIONS TO MONGO
 
 # KATHY
@@ -21,16 +22,28 @@ import re;
 # addToPost
 # removePost
 
+<<<<<<< HEAD
+## two collections dbs: logins and posts
+=======
 ## two mongo dbs: logins and posts
 #HELLO. PULL REQUESTING
 
 =======
 #Winton: I think one db is ok?
+>>>>>>> 5a5c72b34ab05435d7459817aad50a884a2571cf
 
 connection = MongoClient()
 database = connection['database']
 db = connection['db']
 
+<<<<<<< HEAD
+def authenticate(username, password):
+    connection = MongoClient() 
+    ans = db.logins.find({'username':username},{'password':password})
+    for r in ans:
+        return r;
+    return "Bad";
+=======
 def sanitize(input):
     return re.sub('"', "  ", input)
 
@@ -50,6 +63,7 @@ def authenticate(username, password):
      for document in ans:
         return True;
     return False;
+>>>>>>> 5a5c72b34ab05435d7459817aad50a884a2571cf
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
