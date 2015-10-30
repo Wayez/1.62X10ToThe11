@@ -47,10 +47,6 @@ def authenticate(username, password):
     db = connection['logins']
     ans = db.logins.find({'username':username},{'password':password})
     for r in ans:
-"""    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
-"""
      connection = MongoClient()
      db = connection['logins']
      ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
@@ -66,22 +62,11 @@ def newUser(username,password):
         return False
     d = {username:password}
     database.logins.insert(d)
-    
-"""    conn = sqlite3.connect("myDataBase.db")
-    c = conn.cursor()
-    ans = c.execute('select * from logins where username = "%s";' % username)
-"""
-
     connection = MongoClient()
     db = connection['logins']
     check = db.logins.find({'username':username}).count()
     if check != 0:
         return False
-
-"""    ans = c.execute('insert into logins values("'+username+'","'+encrypt(username,password)+'");')
-    conn.commit()
-"""
-
     ans = db.users.insert_one({'username':username} ,{'password':password})
     return True
     connection.close() 
@@ -90,10 +75,10 @@ def changePassword(username, oldPassword, newPassword):
     newPassword = sanitize(newPassword);
     username = sanitize(username);
     if(authenticate(username,oldPassword)):
- """      conn = sqlite3.connect("myDataBase.db")
+       conn = sqlite3.connect("myDataBase.db")
        c = conn.cursor()
        c.execute('update logins set password = "%s" where username = "%s";' % (encrypt(username,newPassword), username))
-       conn.commit()"""
+       conn.commit()
        db = connection['logins']
        db.logins.update(
            {'username': username},
