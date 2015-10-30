@@ -5,7 +5,6 @@ import random
 
 app = Flask(__name__)
 
-
 @app.route("/home",methods=['GET','POST'])
 @app.route("/home/",methods=['GET','POST'])
 @app.route("/",methods=['GET','POST'])

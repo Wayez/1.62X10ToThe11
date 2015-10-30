@@ -22,31 +22,24 @@ import re;
 # removePost
 
 ## two mongo dbs: logins and posts
-<<<<<<< HEAD
 #HELLO. PULL REQUESTING
 
 =======
 #Winton: I think one db is ok?
 
 connection = MongoClient()
-<<<<<<< HEAD
 database = connection['database']
-=======
 db = connection['db']
->>>>>>> e57053a8e2086e2ce881c0fa5a1ba80dfe0cc96f
->>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
 
 def sanitize(input):
     return re.sub('"', "  ", input)
 
 def authenticate(username, password):
     username = sanitize(username)
-<<<<<<< HEAD
     connection = MongoClient() 
     db = connection['logins']
     ans = db.logins.find({'username':username},{'password':password})
     for r in ans:
-=======
 """    conn = sqlite3.connect("myDataBase.db")
     c = conn.cursor()
     ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
@@ -55,20 +48,17 @@ def authenticate(username, password):
      db = connection['logins']
      ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
      for document in ans:
->>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
         return True;
     return False;
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
     username = sanitize(username)
-<<<<<<< HEAD
     ans = database.logins.find({username:True})
     for r in ans:
         return False
     d = {username:password}
     database.logins.insert(d)
-=======
     
 """    conn = sqlite3.connect("myDataBase.db")
     c = conn.cursor()
