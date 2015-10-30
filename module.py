@@ -22,44 +22,31 @@ import re;
 # addToPost
 # removePost
 
-<<<<<<< HEAD
 ## two collections dbs: logins and posts
-=======
 ## two mongo dbs: logins and posts
-<<<<<<< HEAD
-#HELLO. PULL REQUESTING
 
-=======
 #Winton: I think one db is ok?
->>>>>>> 5a5c72b34ab05435d7459817aad50a884a2571cf
 
 connection = MongoClient()
-<<<<<<< HEAD
 database = connection['database']
-=======
 db = connection['db']
->>>>>>> e57053a8e2086e2ce881c0fa5a1ba80dfe0cc96f
->>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
 
-<<<<<<< HEAD
 def authenticate(username, password):
     connection = MongoClient() 
     ans = db.logins.find({'username':username},{'password':password})
     for r in ans:
         return r;
     return "Bad";
-=======
+
 def sanitize(input):
     return re.sub('"', "  ", input)
 
 def authenticate(username, password):
     username = sanitize(username)
-<<<<<<< HEAD
     connection = MongoClient() 
     db = connection['logins']
     ans = db.logins.find({'username':username},{'password':password})
     for r in ans:
-=======
 """    conn = sqlite3.connect("myDataBase.db")
     c = conn.cursor()
     ans = c.execute('select * from logins where username = "'+username+'" and password = "'+encrypt(username,password)+'";')
@@ -68,21 +55,17 @@ def authenticate(username, password):
      db = connection['logins']
      ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
      for document in ans:
->>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
         return True;
     return False;
->>>>>>> 5a5c72b34ab05435d7459817aad50a884a2571cf
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
     username = sanitize(username)
-<<<<<<< HEAD
     ans = database.logins.find({username:True})
     for r in ans:
         return False
     d = {username:password}
     database.logins.insert(d)
-=======
     
 """    conn = sqlite3.connect("myDataBase.db")
     c = conn.cursor()
@@ -100,7 +83,6 @@ def newUser(username,password):
 """
 
     ans = db.users.insert_one({'username':username} ,{'password':password})
->>>>>>> 651b8b77527fe0b7cfd2c2541ca528fa7c28d075
     return True
     connection.close() 
 
