@@ -39,8 +39,8 @@ def home():
             uname = request.form['username']
             pword = request.form['password']
             if module.authenticate(uname,pword):
-                if 'n' not in session:
-                    session['n'] = uname
+                #if 'n' not in session:
+                #    session['n'] = uname
                     return redirect(url_for('home'))
                 #else renders login w/ error message
             else:

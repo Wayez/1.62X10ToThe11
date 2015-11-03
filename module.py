@@ -29,14 +29,6 @@ import re;
 
 connection = MongoClient()
 database = connection['database']
-db = connection['db']
-
-def authenticate(username, password):
-    connection = MongoClient() 
-    ans = db.logins.find({'username':username},{'password':password})
-    for r in ans:
-        return r;
-    return "Bad";
 
 def sanitize(input):
     return re.sub('"', "  ", input)
@@ -44,15 +36,11 @@ def sanitize(input):
 def authenticate(username, password):
     username = sanitize(username)
     connection = MongoClient() 
-    db = connection['logins']
-    ans = db.logins.find({'username':username},{'password':password})
-    for r in ans:
-     connection = MongoClient()
-     db = connection['logins']
-     ans = db.logins.find({'username':"'+username+'"},{'password':"'+encrypt(username,password)+'"})
-     for document in ans:
+    cursors = database.logins.find({username: password})
+    for document in cursors:
+        print(document)
         return True;
-    return False;
+    print(db.logins.find({username: password}).count())
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
@@ -67,7 +55,7 @@ def newUser(username,password):
     check = db.logins.find({'username':username}).count()
     if check != 0:
         return False
-    ans = db.users.insert_one({'username':username} ,{'password':password})
+    ans = db.users.insert({'username':username} ,{'password':password})
     return True
     connection.close() 
 
@@ -87,7 +75,6 @@ def changePassword(username, oldPassword, newPassword):
                'password': newPassword
            },
        )
-       #untested
        return True
     return False
 
@@ -99,15 +86,11 @@ def makePost(username, title, contents):
     connection = MongoClient()
     db = connection['posts']
     
-#    conn = sqlite3.connect("myDataBase.db")
-#    c = conn.cursor()
-#    ans = c.execute('select * from posts where title = "%s";' % title)
-
     ans = db.posts.find({'title':title}) 
     for r in ans:
         return False;
 
-   	db,data.insert([{'username':username, 'title':title, 'contents':contents, 'lastPoster':username}])
+   	#db.data.insert([{'username':username, 'title':title, 'contents':contents, 'lastPoster':username}])
     return True;
     #adds a post to the databes from username with title = title and contents = contents
     #returns a boolean representing if the operation was successful
