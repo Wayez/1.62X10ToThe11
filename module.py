@@ -36,7 +36,7 @@ def sanitize(input):
 def authenticate(username, password):
     username = sanitize(username)
     connection = MongoClient() 
-    cursors = database.logins.find({username: password})
+    cursors = database.logins.find({'username': username, 'password': password})
     for document in cursors:
         return True;
     return False;
@@ -47,14 +47,13 @@ def newUser(username,password):
     ans = database.logins.find({username:True})
     for r in ans:
         return False
-    d = {username:password}
+    d = {'username': username, 'password': password}
     database.logins.insert(d)
     connection = MongoClient()
     db = connection['logins']
-    check = db.logins.find({'username':username}).count()
+    check = db.logins.find({'username': username}).count()
     if check != 0:
         return False
-    ans = db.users.insert({'username':username} ,{'password':password})
     return True
     connection.close() 
 
@@ -122,22 +121,20 @@ def getAllPosts():
 def addToPost(username,title, content):
     title = sanitize(title)
     content = sanitize(content)
-    conn = MongoClient()
-    dbase = conn['posts']
+    conn = MongoClient() 
     newContent = " "+getPost(title)+content
-    ans = dbase.posts.find({'username':username,'title':title})
+    oldUsername =getPoster(title)
+    ans = database.posts.find({'username':username,'title':title})
     for r in ans:
-        return False
-    dbase.data.update({'lastPoster':username, 'title': title})
-    dbase.posts.update({'contents': newContent, 'title': title})
+        return False  
+    database.posts.update({'contents': getPost(title)}, {'contents': newContent, 'title': title, 'username': oldUsername})
     return True;
     #adds content to content of original post and returns a boolean representing wether or not the operation was successful
 
 def removePost(title):
     title = sanitize(title)
-    conn = MongoClient()
-    dbase = conn['posts']
-    dbase.posts.remove({'title':title})
+    conn = MongoClient() 
+    database.posts.remove({'title':title})
     return True;
 
     #removes post with tile=title from database if it exists and username = admin
