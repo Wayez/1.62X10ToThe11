@@ -38,9 +38,8 @@ def authenticate(username, password):
     connection = MongoClient() 
     cursors = database.logins.find({username: password})
     for document in cursors:
-        print(document)
         return True;
-    print(db.logins.find({username: password}).count())
+    return False;
     #returns a boolean that describes whether the user has succesfully logged in.
 
 def newUser(username,password):
@@ -82,38 +81,41 @@ def makePost(username, title, contents):
     username = sanitize(username)
     title = sanitize(title)
     contents = sanitize(contents)
-
     connection = MongoClient()
-    db = connection['posts']
     
-    ans = db.posts.find({'title':title}) 
-    for r in ans:
+    cursors = database.logins.find({'title': title})
+    for document in cursors:
         return False;
+    else:
+    
+        newpost = {'username': username, 'title': title, 'contents': contents}
+        database.posts.insert(newpost)
 
    	#db.data.insert([{'username':username, 'title':title, 'contents':contents, 'lastPoster':username}])
-    return True;
+        return True;
     #adds a post to the databes from username with title = title and contents = contents
     #returns a boolean representing if the operation was successful
     #operation will be unsuccessful if a post with the same title already exists
 
 def getPost(title):
     title = sanitize(title)
-    ans = db.data.find({'title': title})
-    for r in ans:
-        return r[2];
+    ans = database.posts.find({'title': title})
+    newlist = list(ans)
+    for r in newlist:
+        return r.get('contents')
     #returns the content of post with title = title
     #may only be useful for debugging
 
 def getPoster(title):
-    ayylmao = sanitize(title)
-    ans = db.data.find({'title':ayylmao})
-    for r in ans:
-        return r[0]
+    title = sanitize(title)
+    ans = database.posts.find({'title': title})
+    newlist = list(ans)
+    for r in newlist:
+        return r.get('username')
     #returns the original poster of a story
 
-
 def getAllPosts():
-    ans = db.data.find()
+    ans = database.posts.find()
     return ans
     #returns a 2d array where the first index represents row id. The second index works as follows:
     #the 0 index store sthe name of the original poster
