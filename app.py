@@ -152,15 +152,6 @@ def stories():
 
     return render_template("stories.html", link=str) 
 
-@app.route("/random")
-def randomStory():
-    everything=module.getAllPosts()
-    number=random.randint(0,len(everything)-1)
-    title=everything[number][1]
-    str='<meta http-equiv="refresh" content="0; /story/%s" />' % title
-    lin=Markup(str)
-    return render_template("forward.html", link=lin)
-
 @app.route("/pword", methods=['GET','POST'])
 def passChange():
     if request.method=="GET":
