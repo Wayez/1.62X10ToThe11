@@ -49,5 +49,5 @@ sqlite3: https://www.sqlite.org/download.html
 - [x] 10/18/2015 About page
 
 ###Task List(Blahgerrz)
-- [ ] Convert sqlite to mongo
+- [x] Convert sqlite to mongo
 - [ ] Update CSS
