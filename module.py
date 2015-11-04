@@ -117,11 +117,7 @@ def getPoster(title):
 def getAllPosts():
     ans = database.posts.find()
     return ans
-    #returns a 2d array where the first index represents row id. The second index works as follows:
-    #the 0 index store sthe name of the original poster
-    #the 1 index represents the title of the post
-    #the 2 index stores the contents of the post.
-    #the 3 index stores the last user to add to a post
+    #returns the cursor that points to all the contents of the posts collection in the database
 
 def addToPost(username,title, content):
     title = sanitize(title)
